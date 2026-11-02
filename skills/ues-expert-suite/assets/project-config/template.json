@@ -1,0 +1,33 @@
+{
+  "schema_version": "ues-project-config/0.1",
+  "id": "project-template",
+  "version": 1,
+  "product": {
+    "name": null,
+    "summary": null,
+    "platforms": [],
+    "product_type": [],
+    "development_stage": "unknown",
+    "target_users": []
+  },
+  "target": { "version": null, "base_url": null },
+  "sources": [],
+  "tasks": [],
+  "support_matrix": {
+    "status": "proposed",
+    "browsers": [],
+    "locales": [],
+    "themes": [],
+    "viewports": [],
+    "zoom_percent": [],
+    "states": [],
+    "content_samples": []
+  },
+  "rule_mappings": [],
+  "authorization": {
+    "baseline": "read_only",
+    "requires_explicit_authorization": ["生产写入", "删除", "付费", "发布", "权限变更", "敏感上传", "对外发送"]
+  },
+  "delivery": { "formats": ["html", "markdown", "json"], "destination": null, "report_brand": "UX Evaluation · UES" },
+  "open_questions": ["补充产品背景、被测版本及材料", "选择核心任务并定义成功结果", "确认本次测试范围和运行边界"]
+}

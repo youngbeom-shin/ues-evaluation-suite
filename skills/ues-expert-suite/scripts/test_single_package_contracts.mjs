@@ -41,5 +41,16 @@ assert.deepEqual(
 );
 assert.throws(() => resolveScope({ explicit_scope: "only", requested_specialists: [] }));
 assert.throws(() => resolveScope({ requested_specialists: ["ease-of-use-suite-47"] }));
+assert.throws(() => resolveScope({ explicit_scope: "only", requested_specialists: [standardSpecialists[0]], include_visual: true }));
+
+// Every explicit subset must partition all seven modules, including visual-only runs.
+for (let mask = 1; mask < 2 ** specialists.length; mask += 1) {
+  const selected = specialists.filter((_, index) => mask & (1 << index));
+  const result = resolveScope({ explicit_scope: "only", requested_specialists: [...selected, selected[0]] });
+  assert.deepEqual(result.routed_specialists, selected);
+  assert.deepEqual(result.not_selected_specialists, specialists.filter((name) => !selected.includes(name)));
+  assert.equal(result.include_visual, selected.includes(visualSpecialist));
+  assert.equal(new Set([...result.routed_specialists, ...result.not_selected_specialists]).size, specialists.length);
+}
 
 console.log("UES single-package contracts passed (one SKILL.md, seven modules, default six, visual opt-in, explicit subset). ");

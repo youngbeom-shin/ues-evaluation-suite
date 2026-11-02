@@ -32,6 +32,9 @@ export function resolveScope(input = {}) {
   if (explicitScope !== "only" && requested.length > 0) {
     throw new Error("requested_specialists requires explicit_scope=only");
   }
+  if (explicitScope === "only" && includeVisual && !requested.includes(visualSpecialist)) {
+    throw new Error("include_visual=true in only mode requires the visual specialist in requested_specialists");
+  }
 
   const mode = explicitScope === "unspecified" ? "full" : explicitScope;
   const routed =
@@ -45,7 +48,7 @@ export function resolveScope(input = {}) {
     requested_specialists: mode === "only" ? requested : [],
     include_visual: includeVisual,
     routed_specialists: routed,
-    not_selected_specialists: includeVisual ? [] : [visualSpecialist],
+    not_selected_specialists: specialists.filter((name) => !routed.includes(name)),
     basis:
       mode === "full"
         ? explicitScope === "unspecified"

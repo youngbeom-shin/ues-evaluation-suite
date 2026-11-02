@@ -70,7 +70,7 @@ for (const issue of assessment.issues || []) {
     if (value && !html.includes(escaped(value))) errors.push(`Issue ${issue.issue_id} is missing content: ${String(value).slice(0,30)}`);
   }
 }
-requireText('ues-banner-art', 'Official report-kit banner/style marker is missing');
+requireText('ues-banner-art', 'Shared report-kit banner/style marker is missing');
 requireText('role="tablist"', 'Accessible tablist is missing');
 
 if (errors.length) {

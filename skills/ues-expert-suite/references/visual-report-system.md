@@ -2,7 +2,7 @@
 
 本文件是 UES 专家套件及所有专项可视化报告的唯一样式、信息架构和组件合同。它只约束呈现，不改变任何专项的准则、证据门槛、严重度或计分公式。
 
-生成 HTML 报告时，优先从 `../assets/report-kit/` 复制模板、CSS 和交互脚本；最终交付可以内联 CSS/JS，保证报告作为单文件打开。专项自己的 `references/visual-report.md` 只补充专项内容，不得重新定义全局壳层、颜色、卡片或证据交互。最新外观与明细交互以 [dashboard-report.md](dashboard-report.md) 为准；随专项分发的共享规范和资源为同版副本，确保单项报告可独立生成。
+生成 HTML 报告时，优先从 `../assets/report-kit/` 复制模板、CSS 和交互脚本；最终交付可以内联 CSS/JS，保证报告作为单文件打开。专项自己的 `references/visual-report.md` 只补充专项内容，不得重新定义全局壳层、颜色、卡片或证据交互。最新外观与明细交互以 [dashboard-report.md](dashboard-report.md) 为准；单项报告在完整 Skill 包内复用套件根目录这一份资源；内嵌模块不另行安装，也不维护模板或样式副本。
 
 ## 统一术语
 
@@ -28,6 +28,8 @@
 1. Hero：报告名、一句话结论、产品阶段、视口/证据等级、评估日期。
 2. 三个主标签页：`总览`、`整改优先级 · N`、`范围与方法`。
 3. Footer：报告版本与真实存在的 Markdown/JSON/CSV 文件链接。
+
+Hero 的 `REPORT_BRAND` 插槽使用项目配置 `delivery.report_brand`，未提供时为 `UX Evaluation · UES`。品牌名称、产品名及其他纯文本都需 HTML 转义后填入；装饰 SVG 不承载名称、分数或方法归属。单文件报告内联 SVG，文件式报告将 SVG 与 CSS 放在同一报告资源目录。
 
 专项报告即使内容较少，也保持这三个标签页。禁止新增独立“证据图库”页；证据跟随问题、任务或测量结论出现。
 

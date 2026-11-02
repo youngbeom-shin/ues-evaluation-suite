@@ -1,6 +1,6 @@
 # 简易性能与正式性能可视化扩展
 
-先读取本技能随附的 `references/visual-report-system.md` 和 `references/dashboard-report.md`，使用本技能的 `assets/report-kit/`（与总入口同版），该文件是全局样式、信息架构和组件的唯一规范。本文件只定义性能专项内容。
+先完整读取套件根目录的 [可视化报告规范](../../../references/visual-report-system.md) 和 [看板规范](../../../references/dashboard-report.md)，使用共享的 `../../../assets/report-kit/`。性能专项不另行维护报告资源。本文件只定义性能专项内容。
 
 - 合成或单次PCP显示为“简易性能分”，并紧邻显示“预上线合成 PCP”或“Reporter 单次实测”来源；正式监控聚合值显示“正式线上性能分”。
 - 总览：PCP毫秒值、0–10分、评级、数据源、聚合方式、样本数和误差/波动。

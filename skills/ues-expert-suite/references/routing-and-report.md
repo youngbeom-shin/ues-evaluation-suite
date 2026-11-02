@@ -14,6 +14,8 @@
 - `auto`只在用户明确要求自适应范围时按证据与风险路由，仍不得自动加入视觉；
 - `only`允许七个专项中的任意一个或任意组合，数组必须非空，未指定项一律`not_selected`。
 
+`resolve_scope.mjs` 输出的 `routed_specialists` 与 `not_selected_specialists` 必须互斥且合起来覆盖全部七个专项。`only` 模式中视觉也需显式列入 `requested_specialists`；若列表未包含视觉却设置 `include_visual=true`，脚本拒绝该矛盾输入。
+
 视觉质量采用显式加入规则。只有用户明确说需要视觉检测、视觉效果评估、审美检查、视觉质量，或在专项清单中列出视觉时，`include_visual=true`或`requested_specialists`包含`evaluate-visual-quality-v0-9`。仅提供截图、设计稿、URL，或泛称“完整评估”“全量评估”，都不构成视觉授权。未加入时，视觉专项在路由和结果中保留`not_selected`，不读取视觉模块、不创建视觉产物，HTML不渲染`data-ues-visual-quality`。
 
 ## 研发阶段与材料能力

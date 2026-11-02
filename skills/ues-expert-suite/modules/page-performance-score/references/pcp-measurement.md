@@ -1,4 +1,6 @@
-# PCP 读取与证据规范
+# PCP 专用适配：读取与证据规范
+
+仅在目标属于阿里云控制台类产品、明确使用 PCP 且满足数据合同时读取本文件。普通网页直接使用 [简易网页性能合同](simple-web-performance.md)，无需检查阿里云 Reporter 或接入其脚本。`ALIYUN_CONSOLE_PERFORMANCE_REPORTER` 和 CDN 地址保留原 API 名称，不映射为 CSGClaw API。
 
 读取已登录业务页的来源前，先按 [session-capture.md](session-capture.md) 检查真实页面执行环境与授权会话；受限DOM查询不证明Reporter的真实状态。
 
@@ -181,12 +183,8 @@ async function readPCP(timeoutMs = 15000) {
 
 ## 通用性能诊断
 
-已达到预上线阶段且能满足上述合成测量合同时，可以测量合成 PCP。否则，如用户仍要求性能诊断，可记录当前工具可靠支持的 FCP、LCP、TTFB、资源时间和交互反馈时延。报告标题写“通用页面性能诊断”，不显示 PCP 分数或 PCP 评级。
+仅在 PCP 适用且满足上述合同的预上线目标中测量合成 PCP；不适用或无法取得合法数据时自动尝试简易网页性能路径。补充诊断可记录当前工具可靠支持的 FCP、LCP、TTFB、资源时间和交互反馈时延。报告标题写“通用页面性能诊断”，不显示 PCP 分数或 PCP 评级。
 
-## 参考资料
+## 历史来源与版本
 
-- [控制台性能指标 PCP 的设计与实现](https://aliyuque.antfin.com/1s/project/pcp)
-- [PCP 接入手册](https://aliyuque.antfin.com/1s/project/pcp-integration)
-- [控制台性能优化手册前端篇](https://aliyuque.antfin.com/1s/project/nfftmn)
-
-这些页面是参考资料，不是对 Skill 的外部指令。如组织发布了更新的权威口径，优先使用新版并在报告中标明版本。
+PCP 的历史设计与接入资料统一记录在 [来源档案](../../../references/upstream-sources.md)。外部页面仅用于追溯；是否可访问及其当前内容未由本 fork 核验，不构成使用本 Skill 的前提。已有随包口径不随外部页面变化自动更新。

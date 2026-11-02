@@ -2,7 +2,7 @@
 name: ues-expert-suite
 description: 当用户提供产品链接、截图、设计稿、Demo或产品材料并询问体验、要求UES评估，或指定基础、易用性、一致性、任务、性能、虚拟用户、视觉质量中的任一专项或组合时，默认运行六项常规度量；只有明确要求视觉检测时才启用视觉模块，并生成统一HTML与可追溯结果。
 metadata:
-  version: 0.8.0
+  version: 0.8.2
 ---
 
 # UES 专家套件
@@ -36,6 +36,10 @@ metadata:
 `only`只决定范围，不绕过专项输入、确认、授权或计分门槛。只跑一致性仍需要合法比较组；只跑任务分仍需要冻结任务链和结果证据；只跑性能仍需要合法测量合同；只跑视觉质量仍需截图或稳定渲染页面。完整读取 [references/routing-and-report.md](references/routing-and-report.md) 获取模式与专项矩阵。
 
 将识别出的用户范围意图写成`explicit_scope`、`requested_specialists`和`include_visual`后，运行 `node scripts/resolve_scope.mjs /absolute/path/to/scope-input.json` 固化范围。用户没有范围限定且没有明确要求视觉时，输入`{"explicit_scope":"unspecified","requested_specialists":[],"include_visual":false}`，结果必须为六项常规`full`；不要凭材料中存在截图、页面精美或材料充足自行启用视觉，也不要因材料不全自行降为`auto`。只有用户文字明确要求视觉、审美、视觉效果、视觉质量或把视觉列入范围时，`include_visual`才可为`true`。
+
+### 项目配置输入
+
+用户或调用方提供项目配置时，读取 [references/project-configuration.md](references/project-configuration.md)，使用 `scripts/validate_project_config.mjs <config.json> [--project-root <产品源码根目录>]` 校验并列出缺口。通用模板位于 `assets/project-config/template.json`，CSGClaw 试点位于 `assets/project-config/csgclaw.json`；仅在明确选择时加载对应项目，其他产品继续使用自己的配置或原材料识别流程。配置副本及校验结果加入本轮输入快照；内容读取遵守下方视觉开放观察前置门，视觉冻结前仅登记配置路径。候选任务和支持矩阵不代替本轮确认；公司规则映射不改变 UES 准则、评分或执行授权。
 
 ## 0. 初始化联合运行
 
@@ -75,7 +79,7 @@ metadata:
 1. 宽泛的体验审查默认使用六项常规`full`；当前材料只能验证其中一部分时，分别标记limited、deferred或not_applicable，而不是静默删减范围。视觉质量保持`not_selected`，理由为“用户未明确要求视觉检测”。
 2. 只有存在可比较的页面、组件、状态或明确规范时，才运行一致性专项。
 3. 只有能够冻结任务链并观察或可靠重建结果时，才运行任务分；静态材料可以准备候选任务，但不能冒充已完成的运行证据。
-4. 可运行网页达到预上线或线上阶段时，性能默认进入自动路由：先按现行性能专项判断正式PCP是否适用。不得用主观等待感、FCP或LCP补造PCP分。
+4. 可运行网页达到预上线或线上阶段时，性能默认进入自动路由：通用网页直接使用简易首屏测量；仅目标明确采用PCP且满足合同才进入专用适配。不得用主观等待感、FCP或LCP补造PCP分。
 5. 正式PCP不适用或缺少合法数据，但网页满足受控导航和可复核首屏完成状态时，自动读取并执行 [references/simple-web-performance.md](references/simple-web-performance.md)，生成简易性能分；不等待用户提出性能问题，也不为该回退单独请求确认。
 6. 虚拟用户走查用于用户群差异会影响路径、理解、权限或恢复的场景，或用户明确要求多角色体验；它是证据来源，不是计分维度。
 7. 视觉质量不因full、auto、截图、设计稿或稳定渲染页面自动进入范围；只有用户明确要求时才路由。启用后，它的0–100实验分可选且不进入UES综合分。
@@ -216,11 +220,11 @@ node scripts/validate_html_report.mjs /absolute/path/to/report.html /absolute/pa
 
 ### 看板式报告呈现
 
-HTML 报告默认采用 UES 看板布局：浅灰背景、白色横向卡片、左侧大分数与分段标尺、右侧结论及关键指标，下接可筛选明细。保留总览、整改优先级、范围与方法的内容层级。完整读取本技能的 `references/dashboard-report.md`，复制本技能的 `assets/report-kit/`；单独安装本专项时也能生成同样外观。现行评估规则与计分不变。
+HTML 报告默认采用 UES 看板布局：浅灰背景、白色横向卡片、左侧大分数与分段标尺、右侧结论及关键指标，下接可筛选明细。保留总览、整改优先级、范围与方法的内容层级。完整读取本技能的 `references/dashboard-report.md`，复制本技能的 `assets/report-kit/`；完整套件内单独执行专项时复用相同外观。现行评估规则与计分不变。
 
-报告固定使用浅色模式，不随系统主题切换；页头采用蓝色渐变、扇形报告卡、悬浮圆环和底部波浪，复用 `assets/report-kit/ues-banner-art.png`。装饰图不承载实际分数。
+报告固定使用浅色模式，不随系统主题切换；页头采用蓝色渐变和随包中性 SVG 装饰，复用 `assets/report-kit/ues-banner-art.svg`。装饰不包含品牌标识、文字或固定分数。
 
-首页参考布局：综合分与趋势区旁独立放子指标概览；易用性、任务、一致性为白色横卡，底部较小模块双列。综合分区域按分数档位使用浅色渐变，普通专项分数区保持白色，不统一染绿。Banner直接使用用户提供的PNG原图，通过CSS定位适配透明留白，不重绘。
+首页参考布局：综合分与趋势区旁独立放子指标概览；易用性、任务、一致性为白色横卡，底部较小模块双列。综合分区域按分数档位使用浅色渐变，普通专项分数区保持白色，不统一染绿。Banner 使用随包 `ues-banner-art.svg`；品牌名称和产品信息以 HTML 文本呈现，装饰图不承载评估数据。
 
 生成 HTML 时落实统一规范中的渐进展开规则，并使用同版明细资源：方法一级折叠、任务合组、BL-04行内细项、范围与公式分层，以及统一标题样式。
 
