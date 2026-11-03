@@ -47,6 +47,8 @@ node <SKILL_ROOT>/scripts/publish_gitlab_pages.mjs /absolute/path/to/run
 
 `--dry-run` 完成评估校验、依赖收集与包校验，不联网写入。`--input FILE` 选择别处保存的发布输入；`--config FILE` 显式选择授权配置。重试同一命令会从归档事实恢复，不重复提交相同发布包；相同批次内容不同会拒绝覆盖，须建立新修订批次。网络写入失败只核查一次是否已提交，不盲目重试提交。
 
+宿主配置的可选 `output_format` 为 `json`（默认）或 `csgclaw`；`--output` 可以显式选择。CSGClaw 格式只在 `published` 时输出三条原生资源链接，见 [Worker 接入](csgclaw-worker.md)。同一可信宿主需要复用 glab 登录时，可在宿主配置中指定可选的 `glab_config_dir` 绝对路径，发布器通过 glab 读取令牌到内存，不复制令牌文件。
+
 ## 状态与交付
 
 状态依次可能是 `preparing`、`committed`、`awaiting_pipeline`、`deploying`、`deployed_unverified`、`published`，以及 `pending` 或 `failed`。`skipped` 表示未配置/未启用。`publication-state.json` 单独保存在本轮目录，不回写已归档的评估产物。

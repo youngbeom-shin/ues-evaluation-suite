@@ -7,6 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import { packageReport } from './package_report.mjs';
 import { sha256, verifyPackage, safeRelative } from './report_publication.mjs';
 import { resolvePublicationConfig, makeGitlabClient } from './gitlab_pages_client.mjs';
+import { formatCsgclawPublication } from './csgclaw_resource_links.mjs';
 
 const scriptRoot=path.dirname(fileURLToPath(import.meta.url));
 const encode=encodeURIComponent;
@@ -53,8 +54,19 @@ export async function publishPackage({config, directory, statePath, client, wait
   const started=now();
   const timedOut=()=>now()-started>=config.timeout_seconds*1000;
   try {
-    const pages=await client.api(`${project}/pages`);
-    if (pages.url.replace(/\/$/,'')!==base) throw Error('Configured pages_url does not match the GitLab project Pages URL');
+    try {
+      const pages=await client.api(`${project}/pages`);
+      if (pages.url.replace(/\/$/,'')!==base) throw Error('Configured pages_url does not match the GitLab project Pages URL');
+      state.pages_url_basis='gitlab_pages_api';
+    } catch (error) {
+      if (error.status!==403) throw error;
+      // Reading Pages settings requires Maintainer. A project-scoped Developer
+      // can publish without that extra privilege: trust only the host-approved
+      // URL, confirm project identity, then verify the actual deployed bytes.
+      const identity=await client.api(project);
+      if (identity.path_with_namespace!==config.project || identity.pages_access_level==='disabled') throw Error('Publication project identity or Pages access is invalid');
+      state.pages_url_basis='host_configuration_and_content_verification';
+    }
     const branchInfo=await client.api(`${project}/repository/branches/${branch}`);
     if (!branchInfo?.commit?.id) throw Error('Archive branch must be initialized with the Pages pipeline first');
     const existing=await client.api(fileEndpoint(prefix+'/publication.json'),{notFound:true});
@@ -115,17 +127,20 @@ export async function runPublishCli(args=process.argv.slice(2)) {
   let temporary,localStatePath,dryRun=false;
   try {
     const [runDirArg,...options]=args;
-    if (!runDirArg) throw Error('Usage: publish_gitlab_pages.mjs RUN_DIR [--config FILE] [--input FILE] [--dry-run]');
-    let configFile,inputFile;
+    if (!runDirArg) throw Error('Usage: publish_gitlab_pages.mjs RUN_DIR [--config FILE] [--input FILE] [--output json|csgclaw] [--dry-run]');
+    let configFile,inputFile,outputFormat;
     for (let i=0;i<options.length;i++) {
-      if (['--config','--input'].includes(options[i]) && (!options[i+1] || options[i+1].startsWith('--'))) throw Error(`Missing value for ${options[i]}`);
+      if (['--config','--input','--output'].includes(options[i]) && (!options[i+1] || options[i+1].startsWith('--'))) throw Error(`Missing value for ${options[i]}`);
       if (options[i]==='--config') configFile=options[++i];
       else if (options[i]==='--input') inputFile=options[++i];
+      else if (options[i]==='--output') outputFormat=options[++i];
       else if (options[i]==='--dry-run') dryRun=true;
       else throw Error(`Unknown option: ${options[i]}`);
     }
     const selected=resolvePublicationConfig(configFile);
     if (!selected || !selected.config.enabled) { console.log(JSON.stringify({status:'skipped',reason:'Automatic publication is not configured/enabled'})); return; }
+    outputFormat=outputFormat || selected.config.output_format || 'json';
+    if (!['json','csgclaw'].includes(outputFormat)) throw Error('Output format must be json or csgclaw');
     const runDir=fs.realpathSync(runDirArg);
     localStatePath=path.join(runDir,'publication-state.json');
     const input=JSON.parse(fs.readFileSync(inputFile || path.join(runDir,'publication-input.json'),'utf8'));
@@ -139,7 +154,7 @@ export async function runPublishCli(args=process.argv.slice(2)) {
     const result=await publishPackage({config:selected.config,directory:destination,statePath:localStatePath,client,onProgress:s=>{
       if (s.status!==runPublishCli.lastStatus) { console.error(`Pages publication: ${s.status}`);runPublishCli.lastStatus=s.status; }
     }});
-    console.log(JSON.stringify(result,null,2));
+    console.log(result.status==='published' && outputFormat==='csgclaw' ? formatCsgclawPublication(result) : JSON.stringify(result,null,2));
     if (result.status!=='published') process.exitCode=2;
   } catch (error) {
     if (localStatePath && !dryRun) {

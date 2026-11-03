@@ -16,7 +16,7 @@ try {
   const {destination}=packageReport({input,entry:'report.html',meta,out:path.join(temp,'archive')});
   const config={schema_version:'ues-gitlab-pages/0.1',enabled:true,mode:'auto',gitlab_url:'https://gitlab.example.com',project:'team/ux',branch:'reports',archive_path:'report-archive',pages_url:'https://team.pages.example.com/ux',timeout_seconds:30,poll_seconds:1,max_publish_bytes:1048576};
   assert.deepEqual(validatePublicationConfig(config),[]);
-  for (const override of [{pages_url:'http://insecure.test'},{gitlab_url:'https://user:password@gitlab.example.com'},{branch:'main'},{archive_path:'../escape'},{poll_seconds:0}]) assert.ok(validatePublicationConfig({...config,...override}).length);
+  for (const override of [{pages_url:'http://insecure.test'},{gitlab_url:'https://user:password@gitlab.example.com'},{branch:'main'},{archive_path:'../escape'},{poll_seconds:0},{output_format:'unsafe'},{glab_config_dir:'relative/path'}]) assert.ok(validatePublicationConfig({...config,...override}).length);
   assert.equal(resolvePublicationConfig(undefined,{CODEX_HOME:path.join(temp,'none')}),null);
   assert.throws(()=>resolvePublicationConfig(path.join(temp,'missing')),/does not exist/);
   const bytes=fs.readFileSync(path.join(destination,'publication.json'));
@@ -53,6 +53,13 @@ try {
   assert.equal(first.deployment_commit_sha,'newest-complete-archive');
   assert.equal(first.report_url,config.pages_url+'/reports/csgclaw/run-01/report.html');
   const second=await publish();assert.equal(second.reused,true);assert.equal(commits,1);
+  const developerClient={...client,async api(endpoint,options){
+    if(endpoint.endsWith('/pages')){const error=Error('Forbidden');error.status=403;throw error;}
+    if(endpoint==='projects/team%2Fux')return {path_with_namespace:config.project,pages_access_level:'private'};
+    return client.api(endpoint,options);
+  }};
+  const developer=await publish({client:developerClient});
+  assert.equal(developer.status,'published');assert.equal(developer.pages_url_basis,'host_configuration_and_content_verification');
   existing={content:Buffer.from('different manifest').toString('base64')};
   await assert.rejects(publish(),/already contains different content/);assert.equal(commits,1);
   existing=null;simulateLostResponse=true;

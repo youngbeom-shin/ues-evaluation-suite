@@ -9,6 +9,8 @@ export function validatePublicationConfig(c) {
   if (!c || c.schema_version !== 'ues-gitlab-pages/0.1') errors.push('Unsupported publication config schema');
   if (typeof c?.enabled !== 'boolean') errors.push('enabled must be boolean');
   if (c?.mode !== 'auto') errors.push('mode must be auto');
+  if (c?.output_format !== undefined && !['json','csgclaw'].includes(c.output_format)) errors.push('output_format must be json or csgclaw');
+  if (c?.glab_config_dir !== undefined && (typeof c.glab_config_dir !== 'string' || !path.isAbsolute(c.glab_config_dir))) errors.push('glab_config_dir must be an absolute host path');
   for (const key of ['gitlab_url','pages_url']) {
     try {
       const u = new URL(c[key]);
@@ -41,7 +43,8 @@ export function makeGitlabClient(config, {env = process.env, fetchFn = fetch} = 
   // Only capture the token in memory. Never put it in an argument, URL, state or report.
   let token = env.GITLAB_TOKEN || env.GITLAB_ACCESS_TOKEN;
   if (!token) {
-    const result = spawnSync('glab',['config','get','token','--host',new URL(config.gitlab_url).hostname], {encoding:'utf8',timeout:15000,env});
+    const authEnv=config.glab_config_dir ? {...env,GLAB_CONFIG_DIR:config.glab_config_dir} : env;
+    const result = spawnSync('glab',['config','get','token','--host',new URL(config.gitlab_url).hostname], {encoding:'utf8',timeout:15000,env:authEnv});
     if (result.status !== 0 || !result.stdout?.trim()) throw Error('GitLab authentication unavailable: set GITLAB_TOKEN or sign in with glab');
     token = result.stdout.trim();
   }

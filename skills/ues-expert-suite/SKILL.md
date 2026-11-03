@@ -2,7 +2,7 @@
 name: ues-expert-suite
 description: 当用户提供产品链接、截图、设计稿、Demo或产品材料并询问体验、要求UES评估，或指定基础、易用性、一致性、任务、性能、虚拟用户、视觉质量中的任一专项或组合时，默认运行六项常规度量；只有明确要求视觉检测时才启用视觉模块，并生成统一HTML与可追溯结果。
 metadata:
-  version: 0.8.3
+  version: 0.8.4
 ---
 
 # UES 专家套件
@@ -209,6 +209,8 @@ HTML 及评估结果校验完成后，检查 `UES_PUBLICATION_CONFIG`，否则�
 发布器只向已配置的公司归档项目追加本轮发布包。Pages 总目录、项目目录与每轮独立报告链接同时保留，每次从完整归档构建，禁止用新报告覆盖旧报告。发布状态单独保存在 `publication-state.json`，不改评分或评估完成状态；重试同一命令复用相同内容，修订评估使用新批次。
 
 最终交付在本地报告之外返回 `report_url`、`index_url` 和 `project_index_url`。仅 `publication-state.status=published` 表示流水线成功且在线报告、目录、证据资源均验证通过。排队、超时、鉴权或发布失败时继续交付本地结果，说明实际状态、流水线与恢复命令，不把候选链接标记为已发布。未配置自动发布的安装只交付本地报告，不默认上传到本 fork 维护者的仓库。
+
+运行在 CSGClaw Worker 中时，读取 [references/csgclaw-worker.md](references/csgclaw-worker.md)。宿主配置使用 `output_format=csgclaw`，发布器会在成功输出中生成本轮报告、项目历史、全部目录三条原生 `resource_link` 记录；不要用手写候选链接替代已验证的结构化输出。
 
 ## 禁止事项
 

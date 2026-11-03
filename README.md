@@ -1,6 +1,6 @@
 # UES Evaluation Suite
 
-UES 专家套件把网页、截图、设计稿、Demo 或产品材料转成有范围、有证据、可复核的体验评估。本 fork 面向 CSGClaw 及其他 Agent 宿主提供通用 UX 评估能力，以 CSGClaw 为首个项目配置试点。当前工作树版本为 `v0.8.3`，基于上游 UES v0.8.0，保留原准则与评分口径。来源、历史素材与许可记录见 [UPSTREAM.md](UPSTREAM.md)，改造记录见 [CHANGELOG.md](CHANGELOG.md)。
+UES 专家套件把网页、截图、设计稿、Demo 或产品材料转成有范围、有证据、可复核的体验评估。本 fork 面向 CSGClaw 及其他 Agent 宿主提供通用 UX 评估能力，以 CSGClaw 为首个项目配置试点。当前工作树版本为 `v0.8.4`，基于上游 UES v0.8.0，保留原准则与评分口径。来源、历史素材与许可记录见 [UPSTREAM.md](UPSTREAM.md)，改造记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 安装
 
@@ -56,7 +56,7 @@ node skills/ues-expert-suite/scripts/validate_project_config.mjs skills/ues-expe
 
 完整 Skill 现在自带 GitLab Pages 发布器。启用已授权的宿主配置后，每轮 HTML 评估校验完成都会自动发布，并返回本轮报告、全部报告目录和当前项目历史目录；发布失败保留本地结果，重复命令可恢复。
 
-本机配置保存在 `${CODEX_HOME:-~/.codex}/ues-expert-suite/publication.json`，也可通过 `UES_PUBLICATION_CONFIG` 指定。公司部署参数模板是 `skills/ues-expert-suite/assets/publication/opencsg.json`，通用安装默认不启用公司发布目的地。Worker 需单独配置 GitLab 凭据。
+本机配置保存在 `${CODEX_HOME:-~/.codex}/ues-expert-suite/publication.json`，也可通过 `UES_PUBLICATION_CONFIG` 指定。公司部署参数模板是 `skills/ues-expert-suite/assets/publication/opencsg.json`，通用安装默认不启用公司发布目的地。Worker 需单独配置发布目标与鉴权；成功后可用原生 `resource_link` 展示本轮报告与历史目录，见 [CSGClaw Worker 接入](skills/ues-expert-suite/references/csgclaw-worker.md)。
 
 - [全部报告目录](https://youngbeom.pages.opencsg.com/ues-evaluation-suite/)
 - [CSGClaw 项目历史](https://youngbeom.pages.opencsg.com/ues-evaluation-suite/projects/csgclaw/)
@@ -98,7 +98,7 @@ node scripts/test_gitlab_pages.mjs
 
 ## 版本与验证
 
-- 当前工作树版本：`0.8.3`（发布状态见 CHANGELOG）
+- 当前工作树版本：`0.8.4`（发布状态见 CHANGELOG）
 - 单体 Skill：1 个 `SKILL.md`
 - 内嵌专项：7 个 `MODULE.md`
 - 已通过编排、范围、HTML、视觉集成、易用性、一致性、任务评分及虚拟用户测试

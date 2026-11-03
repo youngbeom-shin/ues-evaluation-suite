@@ -17,6 +17,7 @@ deploy-reports:
   script:
     - node scripts/test_report_publication.mjs
     - node scripts/test_gitlab_pages.mjs
+    - node skills/ues-expert-suite/scripts/test_csgclaw_resource_links.mjs
     - |
       latest="$(git ls-remote origin refs/heads/reports | cut -f1)"
       test "$latest" = "$CI_COMMIT_SHA" || { echo "Archive has changed; run the latest pipeline."; exit 1; }
