@@ -1,0 +1,13 @@
+{
+  "schema_version": "ues-gitlab-pages/0.1",
+  "enabled": false,
+  "mode": "auto",
+  "gitlab_url": "https://gitlab.example.com",
+  "project": "group/ux-reports",
+  "branch": "reports",
+  "archive_path": "report-archive",
+  "pages_url": "https://group.pages.example.com/ux-reports",
+  "timeout_seconds": 600,
+  "poll_seconds": 10,
+  "max_publish_bytes": 20971520
+}

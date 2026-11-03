@@ -1,0 +1,33 @@
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "reports"'
+    - when: never
+
+stages: [deploy]
+
+variables:
+  UES_PAGES_IMAGE: swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:22-bookworm@sha256:f6ff3274cf0afa44c1a52ea97af10333be488e61acc2f65b7531715ae2e12764
+
+deploy-reports:
+  stage: deploy
+  image: $UES_PAGES_IMAGE
+  tags: [docker, shared]
+  resource_group: ux-report-pages
+  interruptible: false
+  script:
+    - node scripts/test_report_publication.mjs
+    - node scripts/test_gitlab_pages.mjs
+    - |
+      latest="$(git ls-remote origin refs/heads/reports | cut -f1)"
+      test "$latest" = "$CI_COMMIT_SHA" || { echo "Archive has changed; run the latest pipeline."; exit 1; }
+    - node scripts/build_report_site.mjs report-archive public
+    - |
+      latest="$(git ls-remote origin refs/heads/reports | cut -f1)"
+      test "$latest" = "$CI_COMMIT_SHA" || { echo "Archive has changed; refusing stale deployment."; exit 1; }
+    - echo "Report site available at ${CI_PAGES_URL}"
+  pages:
+    publish: public
+    expire_in: never
+  artifacts:
+    expire_in: 30 days
+    paths: [public]

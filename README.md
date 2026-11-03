@@ -1,6 +1,6 @@
 # UES Evaluation Suite
 
-UES 专家套件把网页、截图、设计稿、Demo 或产品材料转成有范围、有证据、可复核的体验评估。本 fork 面向 CSGClaw 及其他 Agent 宿主提供通用 UX 评估能力，以 CSGClaw 为首个项目配置试点。当前工作树版本为 `v0.8.2`，基于上游 UES v0.8.0，保留原准则与评分口径。来源、历史素材与许可记录见 [UPSTREAM.md](UPSTREAM.md)，改造记录见 [CHANGELOG.md](CHANGELOG.md)。
+UES 专家套件把网页、截图、设计稿、Demo 或产品材料转成有范围、有证据、可复核的体验评估。本 fork 面向 CSGClaw 及其他 Agent 宿主提供通用 UX 评估能力，以 CSGClaw 为首个项目配置试点。当前工作树版本为 `v0.8.3`，基于上游 UES v0.8.0，保留原准则与评分口径。来源、历史素材与许可记录见 [UPSTREAM.md](UPSTREAM.md)，改造记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 安装
 
@@ -50,7 +50,23 @@ node skills/ues-expert-suite/scripts/validate_project_config.mjs skills/ues-expe
 
 校验器只读，输出结构错误、待补充输入、来源可达性和内容哈希。退出码 0 表示配置结构合法；任务确认、浏览器实测和评分仍由现有评估流程完成。来源路径相对被评估产品的源码根目录，配置可随完整 Skill 包交给 CSGClaw Worker。详见 [项目配置合同与调用示例](skills/ues-expert-suite/references/project-configuration.md)。
 
-当前阶段提供配置接入，尚未自动注册 CSGClaw Worker 或发布报告服务。通用网页使用简易首屏测量路径；阿里云 PCP 仅在其指标和数据合同适用时使用专用适配。
+当前阶段提供配置接入，尚未自动注册 CSGClaw Worker。已有报告可通过公司 GitLab 的专用归档分支部署到 Pages，见 [报告发布与恢复说明](docs/gitlab-pages.md)。通用网页使用简易首屏测量路径；阿里云 PCP 仅在其指标和数据合同适用时使用专用适配。
+
+## 自动发布与报告目录
+
+完整 Skill 现在自带 GitLab Pages 发布器。启用已授权的宿主配置后，每轮 HTML 评估校验完成都会自动发布，并返回本轮报告、全部报告目录和当前项目历史目录；发布失败保留本地结果，重复命令可恢复。
+
+本机配置保存在 `${CODEX_HOME:-~/.codex}/ues-expert-suite/publication.json`，也可通过 `UES_PUBLICATION_CONFIG` 指定。公司部署参数模板是 `skills/ues-expert-suite/assets/publication/opencsg.json`，通用安装默认不启用公司发布目的地。Worker 需单独配置 GitLab 凭据。
+
+- [全部报告目录](https://youngbeom.pages.opencsg.com/ues-evaluation-suite/)
+- [CSGClaw 项目历史](https://youngbeom.pages.opencsg.com/ues-evaluation-suite/projects/csgclaw/)
+- [Skill 自动发布合同](skills/ues-expert-suite/references/gitlab-pages-publication.md)
+
+```bash
+node skills/ues-expert-suite/scripts/publish_gitlab_pages.mjs /path/to/evaluation
+node scripts/test_report_publication.mjs
+node scripts/test_gitlab_pages.mjs
+```
 
 ## 仓库结构
 
@@ -82,7 +98,7 @@ node skills/ues-expert-suite/scripts/validate_project_config.mjs skills/ues-expe
 
 ## 版本与验证
 
-- 当前工作树版本：`0.8.2`（发布状态见 CHANGELOG）
+- 当前工作树版本：`0.8.3`（发布状态见 CHANGELOG）
 - 单体 Skill：1 个 `SKILL.md`
 - 内嵌专项：7 个 `MODULE.md`
 - 已通过编排、范围、HTML、视觉集成、易用性、一致性、任务评分及虚拟用户测试

@@ -71,3 +71,9 @@ node skills/ues-expert-suite/scripts/validate_project_config.mjs skills/ues-expe
 `<...>` 由调用方替换。运行任务可能修改文件或调用外部系统；按当前会话授权和专项边界执行，候选任务不构成额外授权。测试凭据不写入配置或仓库。
 
 本阶段提供配置输入与校验入口，未自动安装到 CSGClaw 的 Skill catalog、注册 Worker、发布报告链接或执行浏览器走查。宿主负责将完整 Skill 包加载到实际 Worker，报告交付继续遵守现有 HTML 与证据契约。
+
+## 报告自动发布
+
+`delivery.publication.project_id` 为 Pages 归档的稳定项目标识，通用模板为 null，CSGClaw 试点为 `csgclaw`。它只用于目录分组，不设置发布目的地，也不授予外发权限。此前不包含此字段的配置继续有效。
+
+自动发布由宿主的 `UES_PUBLICATION_CONFIG` 或 `CODEX_HOME/ues-expert-suite/publication.json` 单独启用；执行与恢复见 [GitLab Pages 发布合同](gitlab-pages-publication.md)。

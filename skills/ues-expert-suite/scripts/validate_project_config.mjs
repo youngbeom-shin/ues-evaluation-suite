@@ -98,6 +98,11 @@ export function validateProjectConfig(config) {
   need(formats.length > 0 && formats.every((format) => ["html", "markdown", "json"].includes(format)), "delivery.formats must select html, markdown or json");
   nullableText(delivery.destination, "delivery.destination");
   if (delivery.report_brand !== undefined) nullableText(delivery.report_brand, "delivery.report_brand");
+  if (delivery.publication !== undefined) {
+    const publication=object(delivery.publication,"delivery.publication");
+    for (const key of Object.keys(publication)) need(key === "project_id", `unsupported delivery.publication field: ${key}; destination and authorization belong to the host publication config`);
+    need(publication.project_id === null || (typeof publication.project_id === "string" && /^[a-z0-9][a-z0-9_-]{0,100}$/.test(publication.project_id)), "delivery.publication.project_id must be null or a lowercase archive identifier");
+  }
   texts(c.open_questions, "open_questions");
   return errors;
 }

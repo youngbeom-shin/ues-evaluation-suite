@@ -5,19 +5,66 @@
   "product": {
     "name": "CSGClaw",
     "summary": "OpenCSG 的本地多智能体协作平台，用户通过 Manager 表达目标，由 Worker 执行任务，并在 WebUI 或桌面端查看进度和结果。",
-    "platforms": ["web", "desktop"],
-    "product_type": ["task_system"],
+    "platforms": [
+      "web",
+      "desktop"
+    ],
+    "product_type": [
+      "task_system"
+    ],
     "development_stage": "unknown",
-    "target_users": ["希望组织多个 AI 协作的独立开发者", "需要分工、进度与结果核验的小团队"]
+    "target_users": [
+      "希望组织多个 AI 协作的独立开发者",
+      "需要分工、进度与结果核验的小团队"
+    ]
   },
-  "target": { "version": null, "base_url": null },
+  "target": {
+    "version": null,
+    "base_url": null
+  },
   "sources": [
-    { "id": "product-readme", "path": "README.zh.md", "kind": "product", "authority": "reference", "version": null },
-    { "id": "interaction", "path": "docs/tech/web/interaction-design.md", "kind": "interaction", "authority": "normative", "version": null },
-    { "id": "components", "path": "docs/tech/web/ui-components.md", "kind": "components", "authority": "normative", "version": null },
-    { "id": "development", "path": "docs/tech/web/development.md", "kind": "development", "authority": "normative", "version": null },
-    { "id": "tokens", "path": "web/app/src/shared/styles/tokens.css", "kind": "tokens", "authority": "normative", "version": null },
-    { "id": "walkthrough-plan", "path": "docs/ux/interaction-quality-plan.zh.md", "kind": "process", "authority": "reference", "version": null }
+    {
+      "id": "product-readme",
+      "path": "README.zh.md",
+      "kind": "product",
+      "authority": "reference",
+      "version": null
+    },
+    {
+      "id": "interaction",
+      "path": "docs/tech/web/interaction-design.md",
+      "kind": "interaction",
+      "authority": "normative",
+      "version": null
+    },
+    {
+      "id": "components",
+      "path": "docs/tech/web/ui-components.md",
+      "kind": "components",
+      "authority": "normative",
+      "version": null
+    },
+    {
+      "id": "development",
+      "path": "docs/tech/web/development.md",
+      "kind": "development",
+      "authority": "normative",
+      "version": null
+    },
+    {
+      "id": "tokens",
+      "path": "web/app/src/shared/styles/tokens.css",
+      "kind": "tokens",
+      "authority": "normative",
+      "version": null
+    },
+    {
+      "id": "walkthrough-plan",
+      "path": "docs/ux/interaction-quality-plan.zh.md",
+      "kind": "process",
+      "authority": "reference",
+      "version": null
+    }
   ],
   "tasks": [
     {
@@ -25,10 +72,21 @@
       "role": "首次使用者",
       "goal": "发起一项可控的测试任务，并理解当前执行状态和下一步。",
       "entry": "WebUI 或桌面端的 Manager 会话；具体入口待现场核对。",
-      "preconditions": ["运行地址与被测版本已明确", "使用隔离的测试工作区和样本数据", "执行测试任务的授权已在本轮明确"],
+      "preconditions": [
+        "运行地址与被测版本已明确",
+        "使用隔离的测试工作区和样本数据",
+        "执行测试任务的授权已在本轮明确"
+      ],
       "success_outcome": "任务被接收；用户能识别是否执行中、等待输入、失败或已完成，并理解可执行的下一步。",
-      "evidence_requirements": ["任务提交前后的界面", "实际展示的状态及时间顺序", "需要用户输入时的问题与恢复执行结果"],
-      "basis_source_ids": ["product-readme", "interaction"],
+      "evidence_requirements": [
+        "任务提交前后的界面",
+        "实际展示的状态及时间顺序",
+        "需要用户输入时的问题与恢复执行结果"
+      ],
+      "basis_source_ids": [
+        "product-readme",
+        "interaction"
+      ],
       "basis": "基于产品文档提出的试点候选任务；不是用户已确认的任务链。"
     },
     {
@@ -36,10 +94,21 @@
       "role": "处理执行异常的使用者",
       "goal": "识别任务失败或阻断原因，并在产品支持的范围内恢复。",
       "entry": "T01 的测试任务中可控、可复现的异常状态。",
-      "preconditions": ["存在可控的异常测试条件", "先核实原任务实际状态", "产品提供的恢复能力已核对"],
+      "preconditions": [
+        "存在可控的异常测试条件",
+        "先核实原任务实际状态",
+        "产品提供的恢复能力已核对"
+      ],
       "success_outcome": "用户理解失败或阻断原因；如支持恢复，可完成恢复并确认状态；如不支持，可理解限制及可行下一步。",
-      "evidence_requirements": ["异常触发条件", "失败或阻断反馈", "恢复动作及最终状态，或限制说明"],
-      "basis_source_ids": ["interaction", "walkthrough-plan"],
+      "evidence_requirements": [
+        "异常触发条件",
+        "失败或阻断反馈",
+        "恢复动作及最终状态，或限制说明"
+      ],
+      "basis_source_ids": [
+        "interaction",
+        "walkthrough-plan"
+      ],
       "basis": "依据 FLOW-01/02/03 提出的候选；不预设产品已有取消、重试或断点恢复功能。"
     },
     {
@@ -47,37 +116,162 @@
       "role": "核验交付结果的使用者",
       "goal": "核验任务结果，并访问本次任务承诺交付的产物。",
       "entry": "测试任务显示完成后的结果消息。",
-      "preconditions": ["事前约定任务成功真值和产物类型", "仅使用测试文件及当前角色可访问资源"],
+      "preconditions": [
+        "事前约定任务成功真值和产物类型",
+        "仅使用测试文件及当前角色可访问资源"
+      ],
       "success_outcome": "用户能将结果与原任务对应，核验承诺的产物可访问且内容满足成功真值；状态和实际交付一致。",
-      "evidence_requirements": ["事前冻结的成功真值", "完成消息", "实际打开的产物及核验记录"],
-      "basis_source_ids": ["product-readme", "interaction"],
+      "evidence_requirements": [
+        "事前冻结的成功真值",
+        "完成消息",
+        "实际打开的产物及核验记录"
+      ],
+      "basis_source_ids": [
+        "product-readme",
+        "interaction"
+      ],
       "basis": "基于产品的结果汇总目标提出的候选；具体任务与产物需在本轮确认。"
     }
   ],
   "support_matrix": {
     "status": "proposed",
     "browsers": [],
-    "locales": ["zh-CN", "en"],
-    "themes": ["light", "dark"],
-    "viewports": [{ "width": 1440, "height": 900 }, { "width": 1280, "height": 800 }, { "width": 1024, "height": 768 }],
-    "zoom_percent": [100, 200],
-    "states": ["正常", "加载", "等待用户输入", "失败", "完成", "权限受限（适用时）"],
-    "content_samples": ["空值", "正常内容", "长中文", "长英文", "无空格标识符", "多条记录"]
+    "locales": [
+      "zh-CN",
+      "en"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "viewports": [
+      {
+        "width": 1440,
+        "height": 900
+      },
+      {
+        "width": 1280,
+        "height": 800
+      },
+      {
+        "width": 1024,
+        "height": 768
+      }
+    ],
+    "zoom_percent": [
+      100,
+      200
+    ],
+    "states": [
+      "正常",
+      "加载",
+      "等待用户输入",
+      "失败",
+      "完成",
+      "权限受限（适用时）"
+    ],
+    "content_samples": [
+      "空值",
+      "正常内容",
+      "长中文",
+      "长英文",
+      "无空格标识符",
+      "多条记录"
+    ]
   },
   "rule_mappings": [
-    { "rule_id": "LAY-01", "source_id": "interaction", "specialists": ["ues-baseline-gate", "ease-of-use-suite-47", "consistency-suite-22"], "focus": "检查约定视口下的可读性、操作可达性及意外溢出。" },
-    { "rule_id": "TXT-04", "source_id": "interaction", "specialists": ["ease-of-use-suite-47", "consistency-suite-22"], "focus": "以实际中英文、状态与可用空间检查按钮语义和适配。" },
-    { "rule_id": "LOC-02", "source_id": "interaction", "specialists": ["ease-of-use-suite-47", "consistency-suite-22"], "focus": "检查语言切换、长标签、浮层反馈及编辑内容保留。" },
-    { "rule_id": "FORM-03", "source_id": "interaction", "specialists": ["ues-baseline-gate", "ease-of-use-suite-47"], "focus": "检查焦点、键盘以及输入法确认是否误提交。" },
-    { "rule_id": "FLOW-02", "source_id": "interaction", "specialists": ["ease-of-use-suite-47", "task-experience-score"], "focus": "检查进行中反馈、重复提交防护和结果可见性。" },
-    { "rule_id": "FLOW-03", "source_id": "interaction", "specialists": ["ease-of-use-suite-47", "task-experience-score"], "focus": "检查异常解释、原状态核实和实际支持的恢复路径。" },
-    { "rule_id": "FLOW-05", "source_id": "interaction", "specialists": ["ues-baseline-gate", "consistency-suite-22"], "focus": "在存在角色限制时检查入口、不可用状态与权限反馈。" }
+    {
+      "rule_id": "LAY-01",
+      "source_id": "interaction",
+      "specialists": [
+        "ues-baseline-gate",
+        "ease-of-use-suite-47",
+        "consistency-suite-22"
+      ],
+      "focus": "检查约定视口下的可读性、操作可达性及意外溢出。"
+    },
+    {
+      "rule_id": "TXT-04",
+      "source_id": "interaction",
+      "specialists": [
+        "ease-of-use-suite-47",
+        "consistency-suite-22"
+      ],
+      "focus": "以实际中英文、状态与可用空间检查按钮语义和适配。"
+    },
+    {
+      "rule_id": "LOC-02",
+      "source_id": "interaction",
+      "specialists": [
+        "ease-of-use-suite-47",
+        "consistency-suite-22"
+      ],
+      "focus": "检查语言切换、长标签、浮层反馈及编辑内容保留。"
+    },
+    {
+      "rule_id": "FORM-03",
+      "source_id": "interaction",
+      "specialists": [
+        "ues-baseline-gate",
+        "ease-of-use-suite-47"
+      ],
+      "focus": "检查焦点、键盘以及输入法确认是否误提交。"
+    },
+    {
+      "rule_id": "FLOW-02",
+      "source_id": "interaction",
+      "specialists": [
+        "ease-of-use-suite-47",
+        "task-experience-score"
+      ],
+      "focus": "检查进行中反馈、重复提交防护和结果可见性。"
+    },
+    {
+      "rule_id": "FLOW-03",
+      "source_id": "interaction",
+      "specialists": [
+        "ease-of-use-suite-47",
+        "task-experience-score"
+      ],
+      "focus": "检查异常解释、原状态核实和实际支持的恢复路径。"
+    },
+    {
+      "rule_id": "FLOW-05",
+      "source_id": "interaction",
+      "specialists": [
+        "ues-baseline-gate",
+        "consistency-suite-22"
+      ],
+      "focus": "在存在角色限制时检查入口、不可用状态与权限反馈。"
+    }
   ],
   "authorization": {
     "baseline": "read_only",
-    "requires_explicit_authorization": ["提交或重试 Agent 任务", "修改测试工作区或文件", "安装或删除 Skill", "生产写入", "删除", "付费", "发布", "权限变更", "敏感上传", "对外发送"]
+    "requires_explicit_authorization": [
+      "提交或重试 Agent 任务",
+      "修改测试工作区或文件",
+      "安装或删除 Skill",
+      "生产写入",
+      "删除",
+      "付费",
+      "发布",
+      "权限变更",
+      "敏感上传",
+      "对外发送"
+    ]
   },
-  "delivery": { "formats": ["html", "markdown", "json"], "destination": null, "report_brand": "CSGClaw · UX Evaluation" },
+  "delivery": {
+    "formats": [
+      "html",
+      "markdown",
+      "json"
+    ],
+    "destination": null,
+    "report_brand": "CSGClaw · UX Evaluation",
+    "publication": {
+      "project_id": "csgclaw"
+    }
+  },
   "open_questions": [
     "本次被测提交或版本、运行地址、研发阶段和测试角色是什么？",
     "确认首批任务的实际入口、步骤、成功真值与执行边界。",

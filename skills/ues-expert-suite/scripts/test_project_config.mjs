@@ -52,8 +52,11 @@ invalid((c) => { c.rule_mappings.push(c.rule_mappings[0]); }, "unique source_id/
 invalid((c) => { c.authorization.baseline = "write_allowed"; }, "does not grant execution permission");
 invalid((c) => { c.delivery.formats = []; }, "delivery.formats");
 invalid((c) => { c.delivery.report_brand = 123; }, "delivery.report_brand");
+invalid((c) => { c.delivery.publication.project_id = "../escape"; }, "delivery.publication.project_id");
+invalid((c) => { c.delivery.publication.destination = "https://unexpected.example.com"; }, "unsupported delivery.publication");
 const legacyConfig = structuredClone(template);
 delete legacyConfig.delivery.report_brand;
+delete legacyConfig.delivery.publication;
 assert.deepEqual(validateProjectConfig(legacyConfig), [], "report branding is optional for existing configs");
 invalid((c) => { c.weights = { performance: 1 }; }, "unsupported config field");
 for (const config of [null, [], {}, { tasks: [null], sources: [null], rule_mappings: [null] }]) {
